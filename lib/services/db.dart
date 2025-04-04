@@ -22,7 +22,7 @@ class Db {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text("Sign up Failed"),
+                title:const Text("Sign up Failed"),
                 content: Text(error.toString()),
               );
             },

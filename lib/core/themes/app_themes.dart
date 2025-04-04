@@ -51,8 +51,8 @@ final ThemeData appTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: const Color(0xFF052224),
-    hintStyle: const TextStyle(color: Color(0xFF093030)),
-    labelStyle: const TextStyle(color: Color(0xFF093030)),
+    hintStyle: const TextStyle(color: Color(0xFFD5F0C0)),
+    labelStyle: const TextStyle(color: Color(0xFFD5F0C0)),
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: Color(0xFFD5F0C0)),
       borderRadius: BorderRadius.circular(8.0),

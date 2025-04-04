@@ -57,21 +57,28 @@ class Cards extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  "₹. ${data['remainingAmount']}",
-                  style:const TextStyle(
-                    fontSize: 44,
-                    color: Colors.white,
-                    height: 1.2,
-                    fontWeight: FontWeight.w600,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    "₹ ${data['remainingAmount']}",
+                    style: const TextStyle(
+                      fontSize: 44,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Container(
-            padding:const EdgeInsets.only(top: 30, bottom: 10, left: 10, right: 10),
-            decoration:const BoxDecoration(
+            padding: const EdgeInsets.only(
+              top: 30,
+              bottom: 10,
+              left: 10,
+              right: 10,
+            ),
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
@@ -81,7 +88,7 @@ class Cards extends StatelessWidget {
             child: Row(
               children: [
                 CardOne(
-                  color: Colors.green,
+                  color: Colors.blue,
                   heading: 'Credit',
                   amount: "${data['totalCredit']}",
                 ),
@@ -116,7 +123,7 @@ class CardOne extends StatelessWidget {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: color.withValues(),
+          color: Colors.amber[50],
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
@@ -127,12 +134,15 @@ class CardOne extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(heading, style: TextStyle(color: color, fontSize: 14)),
-                  Text(
-                    "₹ $amount",
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "₹ $amount",
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],

@@ -1,4 +1,5 @@
 
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  // function to be called on logging out 
   var isLogoutLoading = false;
   logOut() async {
     setState(() {
@@ -33,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
 
+// add button press krne pe jo dialog open hota ha to fill the amount and type
   _dialoBuilder(BuildContext context) {
     return showDialog(
         context: context,
@@ -46,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.mainGreen,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue.shade900,
         onPressed: (() {
@@ -57,9 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: AppColors.scaffoldColor,
         title: Text(
-          "Hello,",
+          "Hello ",
           style: TextStyle(color: Colors.white),
         ),
         actions: [

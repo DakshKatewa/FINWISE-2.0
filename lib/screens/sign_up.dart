@@ -87,7 +87,7 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 50.0),
                 TextFormField(
                   controller: _userNameController,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Username", Icons.person),
                   validator: appValidator.validateUsername,
@@ -96,7 +96,7 @@ class _SignUpViewState extends State<SignUpView> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Email", Icons.email),
                   validator: appValidator.validateEmail,
@@ -104,8 +104,8 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _phoneController,
-                  style: TextStyle(color: AppColors.darkGreen),
-                  keyboardType: TextInputType.visiblePassword,
+                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  keyboardType: TextInputType.phone,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Phone number", Icons.call),
                   validator: appValidator.validatePhoneNumber,
@@ -113,8 +113,8 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  style: TextStyle(color: AppColors.darkGreen),
-                  keyboardType: TextInputType.phone,
+                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  keyboardType: TextInputType.visiblePassword,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Password", Icons.lock),
                   validator: appValidator.validatePassword,
@@ -174,7 +174,7 @@ class _SignUpViewState extends State<SignUpView> {
         borderSide: BorderSide(color: Colors.white),
       ),
       filled: true,
-      labelStyle: TextStyle(color: Colors.white),
+      labelStyle: TextStyle(color: Color.fromARGB(53, 65, 65, 65)),
       labelText: label,
       suffixIcon: Icon(suffixIcon, color: Color(0xFF949494)),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),

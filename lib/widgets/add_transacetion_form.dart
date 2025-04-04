@@ -1,4 +1,4 @@
-
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   var appValidator = AppValidator();
   var amountEditController = TextEditingController();
   var titleEditController = TextEditingController();
-  var uid = Uuid();
+  var uid = const Uuid();
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -57,13 +57,16 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       }
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(user!.uid)
+          .doc(user.uid)
           .update({
         "remainingAmount": remainingAmount,
         "totalCredit": totalCredit,
         "totalDebit": totalDebit,
         "updatedAt": timestamp,
       });
+
+      // Creating a new transaction record
+
       var data = {
         "id": id,
         "title": titleEditController.text,
@@ -78,7 +81,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       };
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(user!.uid)
+          .doc(user.uid)
           .collection("transactions")
           .doc(id)
           .set(data);
@@ -95,6 +98,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      
       child: Form(
         key: _formKey,
         child: Column(
@@ -104,14 +108,17 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               controller: titleEditController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title',  ),
+              style: const TextStyle(color: Color(0xFFD5F0C0)),
             ),
+            const SizedBox(height: 20,),
             TextFormField(
               controller: amountEditController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Amount'),
+              decoration: const  InputDecoration(labelText: 'Amount', ),
+              style: const TextStyle(color: Color(0xFFD5F0C0)),
             ),
             CategoryDropDown(
               cattype: category,
@@ -125,14 +132,14 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             ),
             DropdownButtonFormField(
                 value: 'credit',
-                items: [
+                items:const [
                   DropdownMenuItem(
-                    child: Text('Credit'),
                     value: 'credit',
+                    child: Text('Credit'),
                   ),
                   DropdownMenuItem(
+                     value: 'debit',
                     child: Text('Debit'),
-                    value: 'debit',
                   ),
                 ],
                 onChanged: (value) {
@@ -142,8 +149,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                     });
                   }
                 }),
-            SizedBox(
-              height: 16,
+            const SizedBox(
+              height: 20,
             ),
             ElevatedButton(
                 onPressed: () {
@@ -152,8 +159,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                   }
                 },
                 child: isLoader
-                    ? Center(child: CircularProgressIndicator())
-                    : Text("Add Transaction"))
+                    ? const Center(child: CircularProgressIndicator())
+                    : const Text("Add Transaction"))
           ],
         ),
       ),

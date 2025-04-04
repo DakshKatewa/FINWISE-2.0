@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HeroCard extends StatelessWidget {
   HeroCard({super.key, required this.userId});
@@ -57,16 +58,18 @@ class Cards extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    "₹ ${data['remainingAmount']}",
-                    style: const TextStyle(
-                      fontSize: 44,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                AutoSizeText(
+                  "₹ ${data['remainingAmount']}",
+                  style: const TextStyle(
+                    fontSize: 44,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  minFontSize:
+                      12, // Adjust this value as needed for responsiveness
+                  overflow:
+                      TextOverflow.ellipsis, // Truncate if it's too long to fit
                 ),
               ],
             ),
@@ -120,7 +123,8 @@ class CardOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
+      // Changed from Expanded to Flexible to avoid parent constraints issues
       child: Container(
         decoration: BoxDecoration(
           color: Colors.amber[50],
@@ -130,24 +134,26 @@ class CardOne extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(heading, style: TextStyle(color: color, fontSize: 14)),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
+              Expanded(
+                // Allow the text to take available space and resize properly
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(heading, style: TextStyle(color: color, fontSize: 14)),
+                    AutoSizeText(
                       "₹ $amount",
                       style: TextStyle(
                         color: color,
                         fontSize: 30,
                         fontWeight: FontWeight.w600,
                       ),
+                      maxLines: 1,
+                      minFontSize: 12,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(

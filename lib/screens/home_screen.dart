@@ -2,7 +2,7 @@
 import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/add_transacetion_form.dart' show AddTransactionForm;
 import '../widgets/hero_card.dart';
 import '../widgets/transactions_cards.dart';
@@ -46,6 +46,29 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
+ // for fetching username 
+  String? username;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsername();
+  }
+
+  Future<void> fetchUsername() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        username = userDoc['username'] ?? 'User';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.scaffoldColor,
         title: Text(
-          "Hello ",
+          "Hello ${username ?? ''}",
           style: TextStyle(color: Colors.white),
         ),
         actions: [

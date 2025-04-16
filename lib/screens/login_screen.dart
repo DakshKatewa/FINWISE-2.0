@@ -70,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Email", Icons.email),
                   validator: appValidator.validateEmail,
@@ -78,7 +78,7 @@ class _LoginViewState extends State<LoginView> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   obscureText: true,
                   // keyboardType: TextInputType.phone,
                   keyboardType: TextInputType.visiblePassword,
@@ -141,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
         borderSide: BorderSide(color: Colors.white),
       ),
       filled: true,
-      labelStyle: TextStyle(color: Color.fromARGB(53, 65, 65, 65)),
+      labelStyle: TextStyle(color: Color.fromARGB(53, 18, 17, 17)),
       labelText: label,
       suffixIcon: Icon(suffixIcon, color: Color(0xFF949494)),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),

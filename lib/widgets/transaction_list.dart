@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'transaction_card.dart' show TransactionCard;
 
 class TransectionList extends StatelessWidget {
@@ -11,7 +10,9 @@ class TransectionList extends StatelessWidget {
       required this.category,
       required this.type,
       required this.monthYear});
+
   final userId = FirebaseAuth.instance.currentUser!.uid;
+  
 
   final String category;
   final String type;

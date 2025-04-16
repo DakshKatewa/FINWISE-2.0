@@ -8,7 +8,7 @@ import 'login_screen.dart';
 
 // ignore_for_file: prefer_const_constructors
 class SignUpView extends StatefulWidget {
- const SignUpView({super.key});
+  const SignUpView({super.key});
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
@@ -87,7 +87,7 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 50.0),
                 TextFormField(
                   controller: _userNameController,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Username", Icons.person),
                   validator: appValidator.validateUsername,
@@ -96,7 +96,7 @@ class _SignUpViewState extends State<SignUpView> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Email", Icons.email),
                   validator: appValidator.validateEmail,
@@ -126,7 +126,7 @@ class _SignUpViewState extends State<SignUpView> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.mainGreen
+                      backgroundColor: AppColors.mainGreen,
                     ),
                     onPressed: () {
                       isLoader ? print("Loading") : _submitForm();

@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainGreen,
+      //backgroundColor: AppColors.mainGreen,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue.shade900,
         onPressed: (() {
@@ -80,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: AppColors.background,
         ),
       ),
       appBar: AppBar(
-        backgroundColor: AppColors.scaffoldColor,
+        backgroundColor: AppColors.background,
         title: Text(
           "Hello ${username ?? ''}",
-          style: TextStyle(color: Colors.white),
+          //style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? CircularProgressIndicator()
                   : Icon(
                       Icons.exit_to_app,
-                      color: Colors.white,
+                      color: AppColors.iconColor,
                     ))
         ],
       ),

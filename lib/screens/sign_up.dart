@@ -78,7 +78,7 @@ class _SignUpViewState extends State<SignUpView> {
                     "Create new Account",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textColor,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -126,7 +126,7 @@ class _SignUpViewState extends State<SignUpView> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.mainGreen,
+                      backgroundColor: AppColors.primary,
                     ),
                     onPressed: () {
                       isLoader ? print("Loading") : _submitForm();
@@ -138,7 +138,7 @@ class _SignUpViewState extends State<SignUpView> {
                               "Create",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: AppColors.onPrimary,
                               ),
                             ),
                   ),
@@ -153,7 +153,7 @@ class _SignUpViewState extends State<SignUpView> {
                   },
                   child: Text(
                     "Already an user? Login",
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyle(color: AppColors.textColor, fontSize: 12),
                   ),
                 ),
               ],
@@ -166,7 +166,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   InputDecoration _buildInputDecoration(String label, IconData suffixIcon) {
     return InputDecoration(
-      fillColor: AppColors.lightGreen,
+      fillColor: AppColors.surface,
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color(0x35949494)),
       ),
@@ -176,7 +176,7 @@ class _SignUpViewState extends State<SignUpView> {
       filled: true,
       labelStyle: TextStyle(color: Color.fromARGB(53, 65, 65, 65)),
       labelText: label,
-      suffixIcon: Icon(suffixIcon, color: Color(0xFF949494)),
+      suffixIcon: Icon(suffixIcon, color: AppColors.iconColor),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
     );
   }

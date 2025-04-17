@@ -39,10 +39,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       var id = uid.v4();
       String monthyear = DateFormat('MMM y').format(date);
 
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
-          .get();
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .get();
 
       int remainingAmount = userDoc['remainingAmount'];
       int totalCredit = userDoc['totalCredit'];
@@ -59,11 +60,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           .collection('users')
           .doc(user.uid)
           .update({
-        "remainingAmount": remainingAmount,
-        "totalCredit": totalCredit,
-        "totalDebit": totalDebit,
-        "updatedAt": timestamp,
-      });
+            "remainingAmount": remainingAmount,
+            "totalCredit": totalCredit,
+            "totalDebit": totalDebit,
+            "updatedAt": timestamp,
+          });
 
       // Creating a new transaction record
 
@@ -98,7 +99,6 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      
       child: Form(
         key: _formKey,
         child: Column(
@@ -108,18 +108,37 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               controller: titleEditController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
-              decoration: const InputDecoration(labelText: 'Title',  ),
-              style: const TextStyle(color: Color(0xFFD5F0C0)),
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(
+                    color: AppColors.iconColor, // or AppColors.greyish
+                    width: 4.0, // adjust thickness if needed
+                  ),
+                ),
+              ),
+              style: const TextStyle(color: AppColors.textColor),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             TextFormField(
               controller: amountEditController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
               keyboardType: TextInputType.number,
-              decoration: const  InputDecoration(labelText: 'Amount', ),
-              style: const TextStyle(color: Color(0xFFD5F0C0)),
+              decoration: const InputDecoration(
+                labelText: 'Amount',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(
+                    color: AppColors.textColor, // or AppColors.greyish
+                    width: 4.0, // adjust thickness if needed
+                  ),
+                ),
+              ),
+              style: const TextStyle(color: AppColors.textColor),
             ),
+            const SizedBox(height: 10),
             CategoryDropDown(
               cattype: category,
               onChanged: (String? value) {
@@ -130,37 +149,33 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                 }
               },
             ),
+            const SizedBox(height: 10),
             DropdownButtonFormField(
-                value: 'credit',
-                items:const [
-                  DropdownMenuItem(
-                    value: 'credit',
-                    child: Text('Credit'),
-                  ),
-                  DropdownMenuItem(
-                     value: 'debit',
-                    child: Text('Debit'),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      type = value;
-                    });
-                  }
-                }),
-            const SizedBox(
-              height: 20,
+              value: 'credit',
+              items: const [
+                DropdownMenuItem(value: 'credit', child: Text('Credit')),
+                DropdownMenuItem(value: 'debit', child: Text('Debit')),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    type = value;
+                  });
+                }
+              },
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () {
-                  if (isLoader == false) {
-                    _submitForm();
-                  }
-                },
-                child: isLoader
-                    ? const Center(child: CircularProgressIndicator())
-                    : const Text("Add Transaction"))
+              onPressed: () {
+                if (isLoader == false) {
+                  _submitForm();
+                }
+              },
+              child:
+                  isLoader
+                      ? const Center(child: CircularProgressIndicator())
+                      : const Text("Add Transaction"),
+            ),
           ],
         ),
       ),

@@ -60,13 +60,13 @@ class _LoginViewState extends State<LoginView> {
                     "Login Account",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textColor,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: 35.0),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -93,24 +93,43 @@ class _LoginViewState extends State<LoginView> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.mainGreen,
+                      backgroundColor: AppColors.primary,
+                      minimumSize: const Size.fromHeight(
+                        50,
+                      ), // Enough height to avoid clipping
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        height: 1.3, // ensures space below descenders like 'g'
+                      ),
                     ),
-                    onPressed: () {
-                      isLoader ? print("Loading") : _submitForm();
-                    },
+                    onPressed: isLoader ? null : _submitForm,
                     child:
                         isLoader
-                            ? Center(child: CircularProgressIndicator())
-                            : Text(
-                              "Login",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
+                            ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
+                            )
+                            : const Text(
+                              "Login",
+                              // No need to set color here unless overriding from theme
                             ),
                   ),
                 ),
-                SizedBox(height: 30.0),
+                SizedBox(height: 5.0),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -120,7 +139,7 @@ class _LoginViewState extends State<LoginView> {
                   },
                   child: Text(
                     "Create new account",
-                    style: TextStyle(color: AppColors.mainGreen, fontSize: 20),
+                    style: TextStyle(color: AppColors.textColor, fontSize: 12),
                   ),
                 ),
               ],
@@ -133,7 +152,7 @@ class _LoginViewState extends State<LoginView> {
 
   InputDecoration _buildInputDecoration(String label, IconData suffixIcon) {
     return InputDecoration(
-      fillColor: AppColors.lightGreen,
+      fillColor: AppColors.surface,
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color(0x35949494)),
       ),

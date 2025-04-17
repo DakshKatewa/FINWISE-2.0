@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen>
         width: 430.0,
         height: 932.0,
         decoration: const BoxDecoration(
-          color: AppColors.mainGreen,
+          color: AppColors.background,
           //borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         ),
         child: SafeArea(
@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
-                      color: Colors.white,
+                      color: AppColors.darkGreen,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
                     'Your Finance Buddy',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white70,
+                      color: AppColors.darkGreen,
                       letterSpacing: 1.2,
                     ),
                   ),

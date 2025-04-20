@@ -9,18 +9,17 @@ class TransectionList extends StatelessWidget {
     required this.category,
     required this.type,
     required this.monthYear,
+    this.onTransactionDeleted,
   });
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final String category;
   final String type;
   final String monthYear;
+  final VoidCallback? onTransactionDeleted;
 
   @override
   Widget build(BuildContext context) {
-    // Add debug prints to identify values
-    print("Building TransactionList - Category: '$category', Type: '$type', Month: '$monthYear'");
-    
     Query query = FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
@@ -28,39 +27,28 @@ class TransectionList extends StatelessWidget {
         .orderBy('timestamp', descending: true)
         .where('monthyear', isEqualTo: monthYear)
         .where('type', isEqualTo: type);
-    
-    // Only filter by category if it's not "All"
+
     if (category != 'All') {
-      print("Adding category filter: $category");
       query = query.where('category', isEqualTo: category);
     }
-    
-    return FutureBuilder<QuerySnapshot>(
-      future: query.limit(500).get(),
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: query.limit(500).snapshots(), // Changed to stream and snapshots()
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasData) {
-          print("Query returned ${snapshot.data!.docs.length} transactions");
-          // Optionally list the first few transactions to verify
-          if (snapshot.data!.docs.isNotEmpty) {
-            var firstDoc = snapshot.data!.docs.first;
-            print("First transaction: ${firstDoc['title']} - Category: ${firstDoc['category']}");
-          }
-        }
-        
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+          return const Text("Loading");
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No transactions found.'));
         }
-        
+
         var data = snapshot.data!.docs;
         var total = 0;
         for (var i in data) {
           total += i['amount'] as int;
         }
-        
+
         return Column(
           children: [
             Expanded(
@@ -68,7 +56,10 @@ class TransectionList extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   var cardData = data[index];
-                  return TransactionCard(data: cardData);
+                  return TransactionCard(
+                    data: cardData,
+                    onDeleted: onTransactionDeleted,
+                  );
                 },
               ),
             ),
@@ -76,7 +67,10 @@ class TransectionList extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Total ${type}"), Text("₹${total}")],
+                children: [
+                  Text("Total ${type[0].toUpperCase()}${type.substring(1)}"),
+                  Text("₹${total}"),
+                ],
               ),
             ),
           ],

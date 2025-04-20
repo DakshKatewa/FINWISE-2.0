@@ -50,7 +50,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       int totalDebit = userDoc['totalDebit'];
 
       if (type == 'credit') {
-        remainingAmount += amount;
+        remainingAmount += amount;   // check (should have called totalbalance ...)
         totalCredit += amount;
       } else {
         remainingAmount -= amount;
@@ -88,7 +88,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           .set(data);
       //await authService.login(data, context);
 
-      Navigator.pop(context);
+      if(mounted){
+        Navigator.pop(context);
+      }
+      
 
       setState(() {
         isLoader = false;
@@ -173,7 +176,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               },
               child:
                   isLoader
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator(color: AppColors.background,))
                       : const Text("Add Transaction"),
             ),
           ],

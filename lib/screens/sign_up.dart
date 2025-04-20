@@ -53,9 +53,6 @@ class _SignUpViewState extends State<SignUpView> {
       });
     }
 
-    // ScaffoldMessenger.of(_formKey.currentContext!).showSnackBar(
-    //   const SnackBar(content: Text('Form submitted successfully')),
-    // );
   }
 
   var appValidator = AppValidator();
@@ -104,7 +101,7 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _phoneController,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   keyboardType: TextInputType.phone,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Phone number", Icons.call),
@@ -113,7 +110,7 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  style: TextStyle(color: Color.fromARGB(53, 28, 27, 27)),
+                  style: TextStyle(color: Color.fromARGB(246, 8, 8, 8)),
                   keyboardType: TextInputType.visiblePassword,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _buildInputDecoration("Password", Icons.lock),

@@ -12,35 +12,26 @@ import 'widgets/auth_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //print("fff");
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  //print("ffdddf");
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Budget Tacker',
+      title: 'Finwise 2.0',
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaler:const TextScaler.linear(1.0)),
           child: child!,
         );
       },
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade900),
-      //   useMaterial3: true,
-      // ),
       theme: appTheme,
       debugShowCheckedModeBanner: false,
-      
-      // home: FirebaseAuth.instance.currentUser == null ? SignUpView() : const AuthGate(),
       initialRoute: '/',
       routes: AppRoutes.getRoutes(),
     );

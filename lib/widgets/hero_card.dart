@@ -27,7 +27,7 @@ class HeroCard extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-        var data = snapshot.data!.data() as Map<String, dynamic>;
+        var data = snapshot.data!.data() as Map<String, dynamic>;   
 
         return Cards(data: data);
       },

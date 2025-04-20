@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,16 +20,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
     super.initState();
     DateTime now = DateTime.now();
-    setState(() {
-      monthYear = DateFormat('MMM y').format(now);
-    });
+    monthYear = DateFormat('MMM y').format(now);
+  }
+
+//check here 
+  void refreshState() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text("Expenses"),
+        title: const Text("Expenses"),
       ),
       body: Column(
         children: [
@@ -55,6 +57,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           TypeTabBar(
             category: category,
             monthYear: monthYear,
+            onTransactionDeleted: refreshState,
           ),
         ],
       ),

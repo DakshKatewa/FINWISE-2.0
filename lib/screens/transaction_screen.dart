@@ -1,3 +1,4 @@
+import 'package:budgettraker/widgets/expense_insights.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -23,7 +24,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     monthYear = DateFormat('MMM y').format(now);
   }
 
-//check here 
   void refreshState() {
     setState(() {});
   }
@@ -31,9 +31,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Expenses"),
-      ),
+      appBar: AppBar(title: const Text("Expenses")),
       body: Column(
         children: [
           TimeLineMonth(
@@ -54,10 +52,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
               }
             },
           ),
-          TypeTabBar(
-            category: category,
-            monthYear: monthYear,
-            onTransactionDeleted: refreshState,
+          Flexible(
+            flex: 2, // Gives more space to the chart
+            child: ExpenseInsights(selectedMonth: monthYear),
+          ),
+          // Replace Expanded with Flexible
+          Flexible(
+            child: TypeTabBar(
+              category: category,
+              monthYear: monthYear,
+              onTransactionDeleted: refreshState,
+            ),
           ),
         ],
       ),

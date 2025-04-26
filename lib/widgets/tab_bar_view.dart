@@ -15,37 +15,30 @@ class TypeTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            const TabBar(
-              tabs: [
-                Tab(text: "Credit"),
-                Tab(text: "Debit"),
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          const TabBar(tabs: [Tab(text: "Credit"), Tab(text: "Debit")]),
+          Expanded(
+            child: TabBarView(
+              children: [
+                TransectionList(
+                  category: category,
+                  monthYear: monthYear,
+                  type: 'credit',
+                  onTransactionDeleted: onTransactionDeleted,
+                ),
+                TransectionList(
+                  category: category,
+                  monthYear: monthYear,
+                  type: 'debit',
+                  onTransactionDeleted: onTransactionDeleted,
+                ),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  TransectionList(
-                    category: category,
-                    monthYear: monthYear,
-                    type: 'credit',
-                    onTransactionDeleted: onTransactionDeleted, // 👈 pass here
-                  ),
-                  TransectionList(
-                    category: category,
-                    monthYear: monthYear,
-                    type: 'debit',
-                    onTransactionDeleted: onTransactionDeleted, // 👈 and here
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

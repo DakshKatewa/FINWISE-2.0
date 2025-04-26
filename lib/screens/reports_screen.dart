@@ -160,7 +160,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
           children: [
             Text(
               "Monthly Budget",
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             LinearPercentIndicator(

@@ -31,71 +31,80 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       setState(() {
         isLoader = true;
       });
-      final user = FirebaseAuth.instance.currentUser;
-      int timestamp = DateTime.now().millisecondsSinceEpoch;
-      var amount = int.parse(amountEditController.text);
-      DateTime date = DateTime.now();
 
-      var id = uid.v4();
-      String monthyear = DateFormat('MMM y').format(date);
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .get();
+        // Parse as double first, then convert to int to ensure consistent types
+        int amount = double.parse(amountEditController.text).toInt();
+        DateTime date = DateTime.now();
 
-      int remainingAmount = userDoc['remainingAmount'];
-      int totalCredit = userDoc['totalCredit'];
-      int totalDebit = userDoc['totalDebit'];
+        var id = uid.v4();
+        String monthyear = DateFormat('MMM y').format(date);
 
-      if (type == 'credit') {
-        remainingAmount += amount;   // check (should have called totalbalance ...)
-        totalCredit += amount;
-      } else {
-        remainingAmount -= amount;
-        totalDebit += amount;
+        final userDoc =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user!.uid)
+                .get();
+
+        // Make sure we explicitly convert to int
+        int remainingAmount = (userDoc['remainingAmount'] as num).toInt();
+        int totalCredit = (userDoc['totalCredit'] as num).toInt();
+        int totalDebit = (userDoc['totalDebit'] as num).toInt();
+
+        if (type == 'credit') {
+          remainingAmount += amount;
+          totalCredit += amount;
+        } else {
+          remainingAmount -= amount;
+          totalDebit += amount;
+        }
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+              "remainingAmount": remainingAmount,
+              "totalCredit": totalCredit,
+              "totalDebit": totalDebit,
+              "updatedAt": timestamp,
+            });
+
+        // Creating a new transaction record
+        var data = {
+          "id": id,
+          "title": titleEditController.text,
+          "amount": amount,
+          "type": type,
+          "timestamp": timestamp,
+          "totalCredit": totalCredit,
+          "totalDebit": totalDebit,
+          "remainingAmount": remainingAmount,
+          "monthyear": monthyear,
+          "category": category,
+        };
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection("transactions")
+            .doc(id)
+            .set(data);
+
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        // Add error handling
+        print("Error in form submission: $e");
+        // You could show a snackbar or alert dialog here
+      } finally {
+        setState(() {
+          isLoader = false;
+        });
       }
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({
-            "remainingAmount": remainingAmount,
-            "totalCredit": totalCredit,
-            "totalDebit": totalDebit,
-            "updatedAt": timestamp,
-          });
-
-      // Creating a new transaction record
-
-      var data = {
-        "id": id,
-        "title": titleEditController.text,
-        "amount": amount,
-        "type": type,
-        "timestamp": timestamp,
-        "totalCredit": totalCredit,
-        "totalDebit": totalDebit,
-        "remainingAmount": remainingAmount,
-        "monthyear": monthyear,
-        "category": category,
-      };
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection("transactions")
-          .doc(id)
-          .set(data);
-      //await authService.login(data, context);
-
-      if(mounted){
-        Navigator.pop(context);
-      }
-      
-
-      setState(() {
-        isLoader = false;
-      });
     }
   }
 
@@ -176,7 +185,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               },
               child:
                   isLoader
-                      ? const Center(child: CircularProgressIndicator(color: AppColors.background,))
+                      ? const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.background,
+                        ),
+                      )
                       : const Text("Add Transaction"),
             ),
           ],

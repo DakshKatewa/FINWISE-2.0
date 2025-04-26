@@ -33,6 +33,14 @@ class NavBar extends StatelessWidget {
           ),
           label: 'Transaction',
         ),
+        NavigationDestination(
+          icon: Icon(Icons.pie_chart),
+          selectedIcon: Icon(
+            Icons.explore,
+            color: Colors.white,
+          ),
+          label: 'Insights',
+        ),
       ],
     );
   }

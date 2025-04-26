@@ -52,12 +52,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
               }
             },
           ),
-          Flexible(
-            flex: 2, // Gives more space to the chart
-            child: ExpenseInsights(selectedMonth: monthYear),
-          ),
-          // Replace Expanded with Flexible
-          Flexible(
+          // Chart moved to Insights screen, no chart here anymore
+          Expanded(
             child: TypeTabBar(
               category: category,
               monthYear: monthYear,

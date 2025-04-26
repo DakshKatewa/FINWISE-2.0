@@ -27,7 +27,7 @@ class HeroCard extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-        var data = snapshot.data!.data() as Map<String, dynamic>;   
+        var data = snapshot.data!.data() as Map<String, dynamic>;
 
         return Cards(data: data);
       },
@@ -42,8 +42,8 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color:  Color(0xFFFFF3ED), 
- 
+        color: Color(0xFFFFF3ED),
+
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -135,7 +135,7 @@ class CardOne extends StatelessWidget {
       // Changed from Expanded to Flexible to avoid parent constraints issues
       child: Container(
         decoration: BoxDecoration(
-          color:const  Color(0xFFFFF3ED),
+          color: const Color(0xFFFFF3ED),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(

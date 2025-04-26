@@ -15,6 +15,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final TextEditingController _budgetController = TextEditingController();
   int monthlyBudget = 0;
   int totalSpentThisMonth = 0;
+  List<Map<String, dynamic>> monthlyHistory = [];
+  bool showHistory = false;
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future<void> fetchBudgetAndExpenses() async {
     final user = FirebaseAuth.instance.currentUser;
     final now = DateTime.now();
-    final currentMonth = "${DateFormat('MMM y').format(now)}";
+    final currentMonth = DateFormat('MMM y').format(now);
 
     if (user != null) {
       final userDoc =
@@ -83,21 +85,64 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future<void> updateBudget() async {
     int newBudget = int.tryParse(_budgetController.text) ?? 0;
     final user = FirebaseAuth.instance.currentUser;
+    final now = DateTime.now();
+    final currentMonth = DateFormat('MMM y').format(now);
 
     if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
-        {'monthlyBudget': newBudget},
-      );
+      final userDoc = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid);
 
-      // 🛠 After setting the new budget, fetch latest spent
-      int spent = await fetchTotalSpentThisMonth();
-
-      setState(() {
-        monthlyBudget = newBudget;
-        totalSpentThisMonth = spent;
+      await userDoc.update({
+        'monthlyBudget': newBudget,
+        'budgets.$currentMonth': newBudget,
       });
 
+      fetchBudgetAndExpenses();
       _budgetController.clear();
+    }
+  }
+
+  Future<void> fetchMonthlyHistory() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      Map<String, dynamic> budgetsMap =
+          (userDoc.data()?['budgets'] ?? {}) as Map<String, dynamic>;
+
+      List<Map<String, dynamic>> tempHistory = [];
+
+      for (var entry in budgetsMap.entries) {
+        String month = entry.key;
+        int budget = entry.value;
+
+        final transactionsSnapshot =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .collection('transactions')
+                .where('monthyear', isEqualTo: month)
+                .where('type', isEqualTo: 'debit')
+                .get();
+
+        int spent = transactionsSnapshot.docs.fold(0, (sum, doc) {
+          return sum + (doc['amount'] as int);
+        });
+
+        tempHistory.add({'month': month, 'budget': budget, 'spent': spent});
+      }
+
+      tempHistory.sort((a, b) => a['month'].compareTo(b['month']));
+
+      setState(() {
+        monthlyHistory = tempHistory;
+      });
     }
   }
 
@@ -106,42 +151,178 @@ class _ReportsScreenState extends State<ReportsScreen> {
     double percentUsed =
         monthlyBudget > 0 ? totalSpentThisMonth / monthlyBudget : 0;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Monthly Budget", style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 12),
-
-          LinearPercentIndicator(
-            lineHeight: 14.0,
-            percent: percentUsed.clamp(0, 1),
-            backgroundColor: Colors.grey.shade300,
-            progressColor: Colors.blueAccent,
-            center: Text(
-              "${(percentUsed * 100).toStringAsFixed(1)}%",
-              style: const TextStyle(fontSize: 12.0, color: Colors.white),
+    return SafeArea(
+      // <-- Adds padding from top notch and sides
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Monthly Budget",
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text("Spent ₹$totalSpentThisMonth out of ₹$monthlyBudget"),
-
-          const SizedBox(height: 24),
-          TextField(
-            controller: _budgetController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: "Set Monthly Budget",
-              border: OutlineInputBorder(),
+            const SizedBox(height: 16),
+            LinearPercentIndicator(
+              lineHeight: 20.0,
+              percent: percentUsed.clamp(0, 1),
+              backgroundColor: Colors.grey.shade300,
+              progressColor: Colors.blueAccent,
+              animation: true,
+              animationDuration: 800,
+              center: Text(
+                "${(percentUsed * 100).toStringAsFixed(1)}%",
+                style: const TextStyle(fontSize: 14.0, color: Colors.white),
+              ),
+              barRadius: const Radius.circular(8),
             ),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: updateBudget,
-            child: const Text("Update Budget"),
-          ),
-        ],
+            const SizedBox(height: 12),
+            Text(
+              "Spent ₹$totalSpentThisMonth out of ₹$monthlyBudget",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+
+            const SizedBox(height: 30),
+
+            TextField(
+              controller: _budgetController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Set Monthly Budget",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Row for smaller stylish buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: updateBudget,
+                    icon: const Icon(Icons.save_alt),
+                    label: const Text("Update Budget"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      await fetchMonthlyHistory();
+                      setState(() {
+                        showHistory = !showHistory;
+                      });
+                    },
+                    icon: Icon(
+                      showHistory ? Icons.visibility_off : Icons.history,
+                    ),
+                    label: Text(showHistory ? "Hide History" : "Show History"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, 0.1), // Slide slightly up
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: FadeTransition(opacity: animation, child: child),
+                );
+              },
+              child:
+                  showHistory
+                      ? Column(
+                        key: const ValueKey(
+                          'historyList',
+                        ), // Important to trigger animation
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "History",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 12),
+                          ...monthlyHistory.map((entry) {
+                            double percentUsed =
+                                entry['budget'] > 0
+                                    ? (entry['spent'] / entry['budget']).clamp(
+                                      0,
+                                      1,
+                                    )
+                                    : 0;
+
+                            Color progressColor;
+                            if (percentUsed < 0.5) {
+                              progressColor = Colors.green;
+                            } else if (percentUsed < 0.9) {
+                              progressColor = Colors.orange;
+                            } else {
+                              progressColor = Colors.red;
+                            }
+
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 4,
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      entry['month'],
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    LinearProgressIndicator(
+                                      value: percentUsed,
+                                      backgroundColor: Colors.grey.shade300,
+                                      color: progressColor,
+                                      minHeight: 10,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Spent ₹${entry['spent']} / ₹${entry['budget']}",
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      )
+                      : const SizedBox(), // Empty space if not showing
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -17,16 +17,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  // function to be called on logging out 
+  // function to be called on logging out
   var isLogoutLoading = false;
   logOut() async {
     setState(() {
       isLogoutLoading = true;
     });
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: ((context) => LoginView())));
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: ((context) => LoginView())));
 
     setState(() {
       isLogoutLoading = false;
@@ -35,18 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
 
-// add button press krne pe jo dialog open hota ha to fill the amount and type
+  // add button press krne pe jo dialog open hota ha to fill the amount and type
   _dialoBuilder(BuildContext context) {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: AddTransactionForm(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(content: AddTransactionForm());
+      },
+    );
   }
-  
- // for fetching username 
+
+  // for fetching username
   String? username;
 
   @override
@@ -59,10 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
       setState(() {
         username = userDoc['username'] ?? 'User';
@@ -73,17 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: AppColors.mainGreen,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue.shade900,
-        onPressed: (() {
-          _dialoBuilder(context);
-        }),
-        child: Icon(
-          Icons.add,
-          color: AppColors.background,
-        ),
-      ),
       appBar: AppBar(
         backgroundColor: AppColors.background,
         title: Text(
@@ -92,26 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                logOut();
-              },
-              icon: isLogoutLoading
-                  ? CircularProgressIndicator()
-                  : Icon(
-                      Icons.exit_to_app,
-                      color: AppColors.iconColor,
-                    ))
+            onPressed: () {
+              logOut();
+            },
+            icon:
+                isLogoutLoading
+                    ? CircularProgressIndicator()
+                    : Icon(Icons.exit_to_app, color: AppColors.iconColor),
+          ),
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            HeroCard(
-              userId: userId,
-            ),
-            TransactionsCard(),
-          ],
-        ),
+        child: Column(children: [HeroCard(userId: userId), TransactionsCard()]),
       ),
     );
   }

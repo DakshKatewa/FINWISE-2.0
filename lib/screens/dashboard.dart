@@ -1,4 +1,5 @@
 import 'package:budgettraker/screens/insights_screen.dart';
+import 'package:budgettraker/screens/reports_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var isLogoutLoading = false;
   int currentIndex = 0;
-  var pageViewList = [HomeScreen(), TransactionScreen(), InsightsScreen()];
+  var pageViewList = [HomeScreen(), TransactionScreen(), InsightsScreen(), ReportsScreen()];
 
   @override
   Widget build(BuildContext context) {

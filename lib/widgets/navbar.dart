@@ -36,7 +36,15 @@ class NavBar extends StatelessWidget {
         NavigationDestination(
           icon: Icon(Icons.pie_chart),
           selectedIcon: Icon(
-            Icons.explore,
+            Icons.pie_chart,
+            color: Colors.white,
+          ),
+          label: 'Insights',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.analytics_rounded),
+          selectedIcon: Icon(
+            Icons.analytics_rounded,
             color: Colors.white,
           ),
           label: 'Insights',

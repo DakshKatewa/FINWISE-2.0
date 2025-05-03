@@ -1,4 +1,3 @@
-import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {

@@ -39,8 +39,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
               .where('type', isEqualTo: 'debit')
               .get();
 
+      // ignore: avoid_types_as_parameter_names
       int spent = transactionsSnapshot.docs.fold(0, (sum, doc) {
-        return sum + (doc['amount'] as int);
+        // Safely convert any numeric type to int
+        final amount = doc['amount'];
+        if (amount is int) {
+          return sum + amount;
+        } else if (amount is double) {
+          return sum + amount.toInt();
+        }
+        return sum;
       });
 
       return spent;
@@ -60,7 +68,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
               .doc(user.uid)
               .get();
 
-      int budget = (userDoc.data()?['monthlyBudget'] ?? 0) as int;
+      // Safely handle budget which could be int or double
+      final budgetValue = userDoc.data()?['monthlyBudget'] ?? 0;
+      int budget;
+      if (budgetValue is int) {
+        budget = budgetValue;
+      } else if (budgetValue is double) {
+        budget = budgetValue.toInt();
+      } else {
+        budget = 0;
+      }
 
       final transactionsSnapshot =
           await FirebaseFirestore.instance
@@ -71,8 +88,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
               .where('type', isEqualTo: 'debit')
               .get();
 
+      // Safely handle amount which could be int or double
       int spent = transactionsSnapshot.docs.fold(0, (sum, doc) {
-        return sum + (doc['amount'] as int);
+        final amount = doc['amount'];
+        if (amount is int) {
+          return sum + amount;
+        } else if (amount is double) {
+          return sum + amount.toInt();
+        }
+        return sum;
       });
 
       setState(() {
@@ -120,7 +144,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       for (var entry in budgetsMap.entries) {
         String month = entry.key;
-        int budget = entry.value;
+        // Safely convert budget to int
+        int budget;
+        if (entry.value is int) {
+          budget = entry.value;
+        } else if (entry.value is double) {
+          budget = (entry.value as double).toInt();
+        } else {
+          budget = 0;
+        }
 
         final transactionsSnapshot =
             await FirebaseFirestore.instance
@@ -131,8 +163,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 .where('type', isEqualTo: 'debit')
                 .get();
 
+        // Safely handle amount which could be int or double
         int spent = transactionsSnapshot.docs.fold(0, (sum, doc) {
-          return sum + (doc['amount'] as int);
+          final amount = doc['amount'];
+          if (amount is int) {
+            return sum + amount;
+          } else if (amount is double) {
+            return sum + amount.toInt();
+          }
+          return sum;
         });
 
         tempHistory.add({'month': month, 'budget': budget, 'spent': spent});
@@ -148,8 +187,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Convert to double for percentage calculation
     double percentUsed =
-        monthlyBudget > 0 ? totalSpentThisMonth / monthlyBudget : 0;
+        monthlyBudget > 0 ? totalSpentThisMonth / monthlyBudget.toDouble() : 0;
 
     return SafeArea(
       // <-- Adds padding from top notch and sides
@@ -243,7 +283,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return SlideTransition(
                   position: Tween<Offset>(
-                    begin: const Offset(0.0, 0.1), // Slide slightly up
+                    begin: const Offset(0.0, 0.1),
                     end: Offset.zero,
                   ).animate(animation),
                   child: FadeTransition(opacity: animation, child: child),
@@ -252,9 +292,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               child:
                   showHistory
                       ? Column(
-                        key: const ValueKey(
-                          'historyList',
-                        ), // Important to trigger animation
+                        key: const ValueKey('historyList'),
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -263,13 +301,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                           const SizedBox(height: 12),
                           ...monthlyHistory.map((entry) {
+                            // Convert to double for percentage calculation
                             double percentUsed =
                                 entry['budget'] > 0
-                                    ? (entry['spent'] / entry['budget']).clamp(
-                                      0,
-                                      1,
-                                    )
-                                    : 0;
+                                    ? (entry['spent'] /
+                                            entry['budget'].toDouble())
+                                        .clamp(0.0, 1.0)
+                                    : 0.0;
 
                             Color progressColor;
                             if (percentUsed < 0.5) {

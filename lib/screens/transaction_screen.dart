@@ -1,4 +1,3 @@
-import 'package:budgettraker/widgets/expense_insights.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -52,7 +51,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               }
             },
           ),
-          // Chart moved to Insights screen, no chart here anymore
           Expanded(
             child: TypeTabBar(
               category: category,

@@ -11,7 +11,7 @@ class TransactionCard extends StatelessWidget {
   final dynamic data;
   final VoidCallback? onDeleted;
 
-  var appIcons = AppIcons();
+  final appIcons = AppIcons();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class TransactionCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, 10),
-              color: Colors.grey.withOpacity(0.09),
+              color: Colors.grey.withValues(alpha: 0.09),
               blurRadius: 10.0,
               spreadRadius: 4.0,
             ),
@@ -35,7 +35,11 @@ class TransactionCard extends StatelessWidget {
         ),
         child: ListTile(
           minVerticalPadding: 10,
-          contentPadding:const  EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 0,
+          ),
+          // ignore: sized_box_for_whitespace
           leading: Container(
             width: 70,
             height: 100,
@@ -46,8 +50,8 @@ class TransactionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 color:
                     data['type'] == 'credit'
-                        ? Colors.green.withOpacity(0.2)
-                        : Colors.red.withOpacity(0.2),
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Colors.red.withValues(alpha: 0.2),
               ),
               child: Center(
                 child: FaIcon(
@@ -81,15 +85,15 @@ class TransactionCard extends StatelessWidget {
                   const Spacer(),
                   Text(
                     "₹${data['remainingAmount']}",
-                    style:const  TextStyle(color: Colors.grey, fontSize: 13),
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                 ],
               ),
-              Text(formatedDate, style:const  TextStyle(color: Colors.grey)),
+              Text(formatedDate, style: const TextStyle(color: Colors.grey)),
             ],
           ),
           trailing: IconButton(
-            icon:const Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () => _confirmDelete(context),
           ),
         ),
@@ -102,19 +106,24 @@ class TransactionCard extends StatelessWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title:const Text('Delete Transaction'),
-            content:const Text('Are you sure you want to delete this transaction?'),
+            title: const Text('Delete Transaction'),
+            content: const Text(
+              'Are you sure you want to delete this transaction?',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child:const Text('Cancel'),
+                child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () async {
                   Navigator.of(context).pop(); // Close dialog
                   await _deleteTransaction(context);
                 },
-                child:const Text('Delete', style: TextStyle(color: Colors.red)),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ],
           ),
@@ -190,7 +199,7 @@ class TransactionCard extends StatelessWidget {
       }
 
       // Show success message
-    
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Transaction deleted successfully')),
       );

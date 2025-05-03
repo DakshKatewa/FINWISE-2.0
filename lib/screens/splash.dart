@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:budgettracker/core/constants/app_constants.dart';
 import '../core/constants/asset_constants.dart';
 import '../core/themes/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Set system overlay style to match green theme
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -43,19 +41,19 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _handleNavigation() async {
-  await Future.delayed(const Duration(seconds: 6));
-  
-  if (mounted) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // User is signed in, navigate to AuthGate
-      Navigator.pushReplacementNamed(context, '/authGate');
-    } else {
-      // User is not signed in, navigate to SignupPage
-      Navigator.pushReplacementNamed(context, '/signupView');
+    await Future.delayed(const Duration(seconds: 6));
+
+    if (mounted) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // User is signed in, navigate to AuthGate
+        Navigator.pushReplacementNamed(context, '/authGate');
+      } else {
+        // User is not signed in, navigate to SignupPage
+        Navigator.pushReplacementNamed(context, '/signupView');
+      }
     }
   }
-}
 
   @override
   void dispose() {
@@ -69,10 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         width: 430.0,
         height: 932.0,
-        decoration: const BoxDecoration(
-          color: AppColors.background,
-          //borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        ),
+        decoration: const BoxDecoration(color: AppColors.background),
         child: SafeArea(
           child: Center(
             child: FadeTransition(

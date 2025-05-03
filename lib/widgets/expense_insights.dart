@@ -193,8 +193,20 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
           Colors.orange[500]!,
         ];
 
+        // Store the color assigned to each category
+        Map<String, Color> categoryColors = {};
         int creditColorIndex = 0;
         int debitColorIndex = 0;
+
+        // Assign colors to categories
+        for (var entry in data.entries) {
+          final isCredit = entry.key.toLowerCase().contains('(credit)');
+          final Color color =
+              isCredit
+                  ? creditColors[creditColorIndex++ % creditColors.length]
+                  : debitColors[debitColorIndex++ % debitColors.length];
+          categoryColors[entry.key] = color;
+        }
 
         return Column(
           children: [
@@ -219,31 +231,14 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                   PieChartData(
                     sections:
                         data.entries.map((entry) {
-                          final isCredit = entry.key.toLowerCase().contains(
-                            '(credit)',
-                          );
-                          final Color color =
-                              isCredit
-                                  ? creditColors[creditColorIndex++ %
-                                      creditColors.length]
-                                  : debitColors[debitColorIndex++ %
-                                      debitColors.length];
-                          final percentage = (entry.value / total) * 100;
-
+                          final Color color = categoryColors[entry.key]!;
                           return PieChartSectionData(
                             color: color,
                             value: entry.value,
-                            title:
-                                entry.key
-                                    .replaceAll(' (Credit)', '\n(Credit)')
-                                    .replaceAll(' (Debit)', '\n(Debit)') +
-                                "\n${percentage.toStringAsFixed(1)}%",
+                            title: '', // No title on pie slices
                             radius: 80,
-                            titleStyle: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
+                            badgeWidget: null,
+                            showTitle: false,
                           );
                         }).toList(),
                     sectionsSpace: 2,
@@ -254,10 +249,10 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                 ),
               ),
 
-            // Add a legend to explain the colors
+            // Basic type legend (Credit/Debit)
             if (!data.containsKey("No Data"))
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -265,6 +260,66 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                     const SizedBox(width: 20),
                     _buildLegendItem("Debit", debitColors[0]),
                   ],
+                ),
+              ),
+
+            // Detailed legend for each category
+            if (!data.containsKey("No Data"))
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Transaction Details:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...data.entries.map((entry) {
+                        final percentage = (entry.value / total) * 100;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: categoryColors[entry.key],
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  entry.key
+                                      .replaceAll(' (Credit)', ' (Credit)')
+                                      .replaceAll(' (Debit)', ' (Debit)'),
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ),
+                              Text(
+                                "${percentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 ),
               ),
           ],

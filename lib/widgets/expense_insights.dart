@@ -36,12 +36,10 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
     }
   }
 
-  // In ExpenseInsights
   Future<Map<String, double>> _fetchExpensesGroupedByCategory() async {
     try {
       print("Fetching data for month: ${widget.selectedMonth}");
 
-      // Check for null user with more detailed error info
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         print("Error: Current user is null");
@@ -52,7 +50,6 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
         return {"No Data": 1.0};
       }
 
-      // Safe date parsing with error handling
       DateTime parsedDate;
       try {
         parsedDate = DateFormat('MMM y').parse(widget.selectedMonth);
@@ -66,11 +63,9 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
         return {"Error": 1.0};
       }
 
-      // Use monthyear field for filtering
       final monthYearFilter = DateFormat('MMM y').format(parsedDate);
       print("Using month/year filter: $monthYearFilter");
 
-      // Query Firestore with proper error handling
       QuerySnapshot snapshot;
       try {
         snapshot =
@@ -93,25 +88,19 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
 
       Map<String, double> categoryTotals = {};
 
-      // Safely process documents with null checks
       for (var doc in snapshot.docs) {
         try {
           final data = doc.data() as Map<String, dynamic>;
-
-          // Use null-safe access for all fields
           String category = data['category'] as String? ?? 'Uncategorized';
           String type = data['type'] as String? ?? 'Unknown';
-
-          // Handle numeric conversion safely
           double amount;
           if (data['amount'] is num) {
             amount = (data['amount'] as num).toDouble();
           } else {
             print("Warning: Invalid amount in document ${doc.id}");
-            continue; // Skip this document
+            continue;
           }
 
-          // Format category name
           String displayCategory;
           if (type.isNotEmpty) {
             displayCategory =
@@ -125,7 +114,6 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
               (categoryTotals[displayCategory] ?? 0) + amount;
         } catch (e) {
           print("Error processing document ${doc.id}: $e");
-          // Continue to next document
         }
       }
 
@@ -174,7 +162,6 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
         final data = snapshot.data!;
         final total = data.values.reduce((a, b) => a + b);
 
-        // Define separate color palettes for credits and debits
         final creditColors = [
           Colors.green[300]!,
           Colors.green[400]!,
@@ -193,12 +180,10 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
           Colors.orange[500]!,
         ];
 
-        // Store the color assigned to each category
         Map<String, Color> categoryColors = {};
         int creditColorIndex = 0;
         int debitColorIndex = 0;
 
-        // Assign colors to categories
         for (var entry in data.entries) {
           final isCredit = entry.key.toLowerCase().contains('(credit)');
           final Color color =
@@ -235,13 +220,13 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                           return PieChartSectionData(
                             color: color,
                             value: entry.value,
-                            title: '', // No title on pie slices
+                            title: '',
                             radius: 80,
                             badgeWidget: null,
                             showTitle: false,
                           );
                         }).toList(),
-                    sectionsSpace: 2,
+                    sectionsSpace: 0, // Removed white lines
                     centerSpaceRadius: 40,
                     pieTouchData: PieTouchData(enabled: true),
                   ),
@@ -249,7 +234,6 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                 ),
               ),
 
-            // Basic type legend (Credit/Debit)
             if (!data.containsKey("No Data"))
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -263,7 +247,6 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                 ),
               ),
 
-            // Detailed legend for each category
             if (!data.containsKey("No Data"))
               Padding(
                 padding: const EdgeInsets.all(16.0),

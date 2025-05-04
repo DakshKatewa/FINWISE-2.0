@@ -11,7 +11,7 @@ plugins {
 android {
     ndkVersion = "27.0.12077973"
     namespace = "com.example.budgettraker"
-    compileSdk = 34 
+    compileSdk = 35 
    
 
     compileOptions {
@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "com.example.budgettraker"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }

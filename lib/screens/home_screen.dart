@@ -2,7 +2,8 @@ import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:budgettraker/widgets/drawer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart'; // Add this dependency
+import '../providers/user_data_provider.dart';
 import '../widgets/hero_card.dart';
 import '../widgets/transactions_cards.dart';
 import 'login_screen.dart';
@@ -16,6 +17,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var isLogoutLoading = false;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  bool isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    // Try to load cached data first for immediate display
+    final hasCachedData = await UserDataProvider.instance.loadCachedData();
+
+    if (!hasCachedData) {
+      // If no cached data, refresh from Firebase
+      await UserDataProvider.instance.refreshData();
+    }
+
+    // Set up real-time listeners for future updates
+    UserDataProvider.instance.setupListeners(userId);
+
+    if (mounted) {
+      setState(() {
+        isInitialized = true;
+      });
+    }
+  }
 
   logOut() async {
     setState(() {
@@ -32,41 +60,35 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  String? username;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUsername();
-  }
-
-  Future<void> fetchUsername() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
-      setState(() {
-        username = userDoc['username'] ?? 'User';
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFFF3ED),
-        title: Text("Hello ${username ?? ''}"),
-      ),
-      drawer: const AppDrawer(), // ← Use the drawer here
-      body: SingleChildScrollView(
-        child: Column(
-          children: [HeroCard(userId: userId), const TransactionsCard()],
-        ),
+    return ChangeNotifierProvider.value(
+      value: UserDataProvider.instance,
+      child: Consumer<UserDataProvider>(
+        builder: (context, provider, _) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color(0xFFFFF3ED),
+              title: Text("Hello ${provider.username}"),
+            ),
+            drawer: const AppDrawer(),
+            body:
+                provider.isLoading && !isInitialized
+                    ? const Center(child: CircularProgressIndicator())
+                    : RefreshIndicator(
+                      onRefresh: () => provider.refreshData(),
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            HeroCard(userId: userId),
+                            const TransactionsCard(),
+                          ],
+                        ),
+                      ),
+                    ),
+          );
+        },
       ),
     );
   }

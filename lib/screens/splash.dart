@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import '../core/constants/asset_constants.dart';
 import '../core/themes/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../providers/user_data_provider.dart'; // You'll need to create this
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  bool _isDataLoaded = false;
 
   @override
   void initState() {
@@ -29,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 5000),
+      duration: const Duration(milliseconds: 2000), // Reduced animation time
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -41,10 +44,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _handleNavigation() async {
-    await Future.delayed(const Duration(seconds: 6));
+    // Give the animation at least 2 seconds to run
+    await Future.delayed(const Duration(seconds: 2));
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // User is signed in, prefetch data
+      await _prefetchUserData(user.uid);
+    }
+
+    // Ensure we show splash for at least 3 seconds total
+    if (!_isDataLoaded) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
 
     if (mounted) {
-      final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // User is signed in, navigate to AuthGate
         Navigator.pushReplacementNamed(context, '/authGate');
@@ -52,6 +66,48 @@ class _SplashScreenState extends State<SplashScreen>
         // User is not signed in, navigate to SignupPage
         Navigator.pushReplacementNamed(context, '/signupView');
       }
+    }
+  }
+
+  Future<void> _prefetchUserData(String userId) async {
+    try {
+      // Get user document
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+
+      if (userDoc.exists) {
+        final userData = userDoc.data() as Map<String, dynamic>;
+
+        // Get recent transactions
+        final transactionsSnapshot =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection('transactions')
+                .orderBy('timestamp', descending: true)
+                .limit(20)
+                .get();
+
+        final transactions =
+            transactionsSnapshot.docs.map((doc) => doc.data()).toList();
+
+        // Store in provider for immediate access
+        await UserDataProvider.initialize(
+          userData: userData,
+          transactions: transactions,
+          username: userData['username'] ?? 'User',
+        );
+
+        setState(() {
+          _isDataLoaded = true;
+        });
+      }
+    } catch (e) {
+      print('Error prefetching data: $e');
+      // Even if there's an error, we'll continue with navigation
     }
   }
 
@@ -99,6 +155,21 @@ class _SplashScreenState extends State<SplashScreen>
                       letterSpacing: 1.2,
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  if (_isDataLoaded)
+                    const Text(
+                      'Data loaded',
+                      style: TextStyle(fontSize: 14, color: Colors.green),
+                    )
+                  else
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.darkGreen,
+                      ),
+                    ),
                 ],
               ),
             ),

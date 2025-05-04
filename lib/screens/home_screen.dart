@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: const Color(0xFFFFF3ED),
         title: Text("Hello ${username ?? ''}"),
       ),
       drawer: const AppDrawer(), // ← Use the drawer here

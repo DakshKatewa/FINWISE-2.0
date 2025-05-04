@@ -16,7 +16,7 @@ class TransactionsCard extends StatelessWidget {
             children: [
               Text(
                 "Recent Transactions",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
               ),
             ],
           ),

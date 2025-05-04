@@ -1,3 +1,4 @@
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:budgettraker/screens/insights_screen.dart';
 import 'package:budgettraker/screens/reports_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
       extendBody: true,
       body: pageViewList[currentIndex],
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: AppColors.buttonColor,
         shape: const CircleBorder(),
         onPressed: _showAddTransactionDialog,
         child: const Icon(Icons.add, color: Colors.white),

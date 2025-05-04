@@ -68,8 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, provider, _) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: const Color(0xFFFFF3ED),
-              title: Text("Hello ${provider.username}"),
+              backgroundColor: AppColors.background,
+              title: Text(
+                "Hello ${provider.username}",
+                style: const TextStyle(color: AppColors.textColor),
+              ),
             ),
             drawer: const AppDrawer(),
             body:

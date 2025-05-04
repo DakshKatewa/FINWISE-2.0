@@ -26,7 +26,7 @@ class HeroCard extends StatelessWidget {
   Widget _buildLoadingHeroCard() {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFFFF3ED),
+        color: AppColors.background,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -73,7 +73,7 @@ class HeroCard extends StatelessWidget {
                 Flexible(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF3ED),
+                      color: AppColors.background,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -115,7 +115,7 @@ class HeroCard extends StatelessWidget {
                 Flexible(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF3ED),
+                      color: AppColors.background,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -169,7 +169,7 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFFFF3ED),
+        color: AppColors.background,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -223,13 +223,13 @@ class Cards extends StatelessWidget {
             child: Row(
               children: [
                 CardOne(
-                  color: Colors.blue,
+                  color: AppColors.buttonColor,
                   heading: 'Credit',
                   amount: "${data['totalCredit']}",
                 ),
                 const SizedBox(width: 10),
                 CardOne(
-                  color: Colors.red,
+                  color: AppColors.timelinecolor,
                   heading: 'Debit',
                   amount: "${data['totalDebit']}",
                 ),
@@ -249,6 +249,7 @@ class CardOne extends StatelessWidget {
     required this.heading,
     required this.amount,
   });
+
   final Color color;
   final String heading;
   final String amount;
@@ -258,8 +259,16 @@ class CardOne extends StatelessWidget {
     return Flexible(
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF3ED),
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: Offset(2, 4),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(10),

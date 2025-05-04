@@ -1,3 +1,4 @@
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +190,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               lineHeight: 20.0,
               percent: percentUsed.clamp(0, 1),
               backgroundColor: Colors.grey.shade300,
-              progressColor: Colors.blueAccent,
+              progressColor: AppColors.buttonColor,
               animation: true,
               animationDuration: 800,
               center: Text(

@@ -31,34 +31,48 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Expenses")),
-      body: Column(
-        children: [
-          TimeLineMonth(
-            onChanged: (String? value) {
-              if (value != null) {
-                setState(() {
-                  monthYear = value;
-                });
-              }
-            },
-          ),
-          CategoryList(
-            onChanged: (String? value) {
-              if (value != null) {
-                setState(() {
-                  category = value;
-                });
-              }
-            },
-          ),
-          Expanded(
-            child: TypeTabBar(
-              category: category,
-              monthYear: monthYear,
-              onTransactionDeleted: refreshState,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Timeline month selector
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+              child: TimeLineMonth(
+                onChanged: (String? value) {
+                  if (value != null) {
+                    setState(() {
+                      monthYear = value;
+                    });
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+
+            // Category selector
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: CategoryList(
+                onChanged: (String? value) {
+                  if (value != null) {
+                    setState(() {
+                      category = value;
+                    });
+                  }
+                },
+              ),
+            ),
+
+            // Main content area
+            Expanded(
+              child: TypeTabBar(
+                category: category,
+                monthYear: monthYear,
+                onTransactionDeleted: refreshState,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

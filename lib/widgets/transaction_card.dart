@@ -50,13 +50,13 @@ class TransactionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 color:
                     data['type'] == 'credit'
-                        ? Colors.green.withValues(alpha: 0.2)
-                        : Colors.red.withValues(alpha: 0.2),
+                        ? Color(0xffA0C4A8).withOpacity(0.3)
+                        : Color(0xFF6B7280).withOpacity(0.2),
               ),
               child: Center(
                 child: FaIcon(
                   appIcons.getExpenseCategoryIcons('${data['category']}'),
-                  color: data['type'] == 'credit' ? Colors.green : Colors.red,
+                  color: data['type'] == 'credit' ? const Color.fromARGB(255, 63, 120, 65) : const Color.fromARGB(255, 187, 61, 52),
                 ),
               ),
             ),
@@ -67,7 +67,7 @@ class TransactionCard extends StatelessWidget {
               Text(
                 "${data['type'] == 'credit' ? '+' : '-'} ₹${data['amount']}",
                 style: TextStyle(
-                  color: data['type'] == 'credit' ? Colors.green : Colors.red,
+                  color: data['type'] == 'credit' ? const Color.fromARGB(255, 63, 120, 65) : const Color.fromARGB(255, 187, 61, 52),
                 ),
               ),
             ],
@@ -93,7 +93,7 @@ class TransactionCard extends StatelessWidget {
             ],
           ),
           trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Color.fromARGB(255, 204, 84, 73)),
             onPressed: () => _confirmDelete(context),
           ),
         ),

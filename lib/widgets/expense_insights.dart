@@ -1,3 +1,4 @@
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -198,7 +199,11 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
             const SizedBox(height: 16),
             Text(
               "Transaction Distribution for ${widget.selectedMonth}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkGreen,
+              ),
             ),
             const SizedBox(height: 8),
             if (data.containsKey("No Data"))

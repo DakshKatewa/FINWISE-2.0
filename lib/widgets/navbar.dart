@@ -1,3 +1,4 @@
+import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -31,13 +32,20 @@ class NavBar extends StatelessWidget {
   Widget _buildNavItem(BuildContext context, IconData icon, int index) {
     final isSelected = selectedIndex == index;
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.shade900 : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
+        shape: BoxShape.circle,
+        color: isSelected ? AppColors.iconback : Colors.transparent,
       ),
       child: IconButton(
-        icon: Icon(icon, color: isSelected ? Colors.white : Colors.black),
+        icon: Icon(
+          icon,
+          color: isSelected ? AppColors.iconColor : AppColors.iconColor,
+          size: isSelected ? 28 : 24,
+        ),
         onPressed: () => onDestinationSelected(index),
       ),
     );

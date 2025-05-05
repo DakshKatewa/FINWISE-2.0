@@ -22,7 +22,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Insights")),
+      appBar: AppBar(
+        title: const Text("Insights"),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           TimeLineMonth(

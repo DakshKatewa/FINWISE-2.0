@@ -1,5 +1,5 @@
 class AppValidator {
-   String? validateEmail(value) {
+  String? validateEmail(value) {
     if (value!.isEmpty) {
       return 'Please enter an email';
     }
@@ -35,12 +35,10 @@ class AppValidator {
     return null;
   }
 
-    String? isEmptyCheck(value) {
+  String? isEmptyCheck(value) {
     if (value!.isEmpty) {
       return 'Please fill details';
     }
     return null;
   }
-
-
 }

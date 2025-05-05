@@ -16,7 +16,11 @@ class TransactionsCard extends StatelessWidget {
             children: [
               Text(
                 "Recent Transactions",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
@@ -35,7 +39,6 @@ class RecentTransactionsListOptimized extends StatelessWidget {
     return Consumer<UserDataProvider>(
       builder: (context, provider, _) {
         if (provider.isLoading) {
-          // Show skeleton loading UI
           return _buildLoadingList();
         }
 
@@ -55,9 +58,7 @@ class RecentTransactionsListOptimized extends StatelessWidget {
           itemBuilder: (context, index) {
             return TransactionCard(
               data: provider.transactions[index],
-              onDeleted: () {
-                // Will be automatically updated via the Stream listener
-              },
+              onDeleted: () {},
             );
           },
         );
@@ -66,10 +67,9 @@ class RecentTransactionsListOptimized extends StatelessWidget {
   }
 
   Widget _buildLoadingList() {
-    // Create a skeleton loading UI instead of just text
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: 3, // Show 3 skeleton items
+      itemCount: 3,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return Padding(
@@ -90,7 +90,6 @@ class RecentTransactionsListOptimized extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Leading circle
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(

@@ -25,7 +25,7 @@ class FirestoreService {
               .doc(user.uid)
               .collection('transactions')
               .where('monthyear', isEqualTo: monthyear)
-              .where('type', isEqualTo: 'debit') // Only debit transactions
+              .where('type', isEqualTo: 'debit')
               .get();
 
       int totalSpent = 0;

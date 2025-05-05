@@ -4,7 +4,7 @@ import '../core/constants/asset_constants.dart';
 import '../core/themes/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../providers/user_data_provider.dart'; // You'll need to create this
+import '../providers/user_data_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000), // Reduced animation time
+      duration: const Duration(milliseconds: 2000),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -44,26 +44,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _handleNavigation() async {
-    // Give the animation at least 2 seconds to run
     await Future.delayed(const Duration(seconds: 2));
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // User is signed in, prefetch data
       await _prefetchUserData(user.uid);
     }
 
-    // Ensure we show splash for at least 3 seconds total
     if (!_isDataLoaded) {
       await Future.delayed(const Duration(seconds: 1));
     }
 
     if (mounted) {
       if (user != null) {
-        // User is signed in, navigate to AuthGate
         Navigator.pushReplacementNamed(context, '/authGate');
       } else {
-        // User is not signed in, navigate to SignupPage
         Navigator.pushReplacementNamed(context, '/signupView');
       }
     }
@@ -71,7 +66,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _prefetchUserData(String userId) async {
     try {
-      // Get user document
       final userDoc =
           await FirebaseFirestore.instance
               .collection('users')
@@ -80,8 +74,6 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (userDoc.exists) {
         final userData = userDoc.data() as Map<String, dynamic>;
-
-        // Get recent transactions
         final transactionsSnapshot =
             await FirebaseFirestore.instance
                 .collection('users')
@@ -94,7 +86,6 @@ class _SplashScreenState extends State<SplashScreen>
         final transactions =
             transactionsSnapshot.docs.map((doc) => doc.data()).toList();
 
-        // Store in provider for immediate access
         await UserDataProvider.initialize(
           userData: userData,
           transactions: transactions,
@@ -107,7 +98,6 @@ class _SplashScreenState extends State<SplashScreen>
       }
     } catch (e) {
       print('Error prefetching data: $e');
-      // Even if there's an error, we'll continue with navigation
     }
   }
 

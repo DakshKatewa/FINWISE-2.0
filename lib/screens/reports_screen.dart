@@ -223,7 +223,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   child: OutlinedButton.icon(
                     onPressed: updateBudget,
                     icon: const Icon(Icons.save_alt),
-                    label: const Text("Update Budget"), // Updated label
+                    label: const Text("Update Budget"),
                   ),
                 ),
                 const SizedBox(width: 12),

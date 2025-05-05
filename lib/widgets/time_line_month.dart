@@ -26,7 +26,6 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
     }
     currentMonth = DateFormat('MMM y').format(now);
 
-    // Use a microtask to ensure the UI is built before scrolling
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollToSelectedMonth();
     });

@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
           },
         ),
       ),
-      resizeToAvoidBottomInset: false, // Add this line here
+      resizeToAvoidBottomInset: false,
     );
   }
 }

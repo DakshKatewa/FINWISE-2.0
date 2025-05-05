@@ -10,11 +10,9 @@ class HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use the data from the provider instead of fetching it again
     return Consumer<UserDataProvider>(
       builder: (context, provider, _) {
         if (provider.userData == null) {
-          // Show a shimmer loading effect or skeleton UI instead of text
           return _buildLoadingHeroCard();
         }
 
@@ -266,7 +264,7 @@ class CardOne extends StatelessWidget {
               color: Colors.black.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 8,
-              offset: Offset(2, 4),
+              offset: const Offset(2, 4),
             ),
           ],
         ),

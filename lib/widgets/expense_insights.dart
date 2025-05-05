@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseInsights extends StatefulWidget {
-  final String selectedMonth; // Expected format: "Apr 2025"
+  final String selectedMonth;
 
   const ExpenseInsights({super.key, required this.selectedMonth});
 
@@ -231,7 +231,7 @@ class _ExpenseInsightsState extends State<ExpenseInsights> {
                             showTitle: false,
                           );
                         }).toList(),
-                    sectionsSpace: 0, // Removed white lines
+                    sectionsSpace: 0,
                     centerSpaceRadius: 40,
                     pieTouchData: PieTouchData(enabled: true),
                   ),

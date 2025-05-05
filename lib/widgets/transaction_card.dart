@@ -39,8 +39,7 @@ class TransactionCard extends StatelessWidget {
             horizontal: 10,
             vertical: 0,
           ),
-          // ignore: sized_box_for_whitespace
-          leading: Container(
+          leading: SizedBox(
             width: 70,
             height: 100,
             child: Container(
@@ -56,7 +55,10 @@ class TransactionCard extends StatelessWidget {
               child: Center(
                 child: FaIcon(
                   appIcons.getExpenseCategoryIcons('${data['category']}'),
-                  color: data['type'] == 'credit' ? const Color.fromARGB(255, 63, 120, 65) : const Color.fromARGB(255, 187, 61, 52),
+                  color:
+                      data['type'] == 'credit'
+                          ? const Color.fromARGB(255, 63, 120, 65)
+                          : const Color.fromARGB(255, 187, 61, 52),
                 ),
               ),
             ),
@@ -67,7 +69,10 @@ class TransactionCard extends StatelessWidget {
               Text(
                 "${data['type'] == 'credit' ? '+' : '-'} ₹${data['amount']}",
                 style: TextStyle(
-                  color: data['type'] == 'credit' ? const Color.fromARGB(255, 63, 120, 65) : const Color.fromARGB(255, 187, 61, 52),
+                  color:
+                      data['type'] == 'credit'
+                          ? const Color.fromARGB(255, 63, 120, 65)
+                          : const Color.fromARGB(255, 187, 61, 52),
                 ),
               ),
             ],
@@ -93,7 +98,10 @@ class TransactionCard extends StatelessWidget {
             ],
           ),
           trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Color.fromARGB(255, 204, 84, 73)),
+            icon: const Icon(
+              Icons.delete,
+              color: Color.fromARGB(255, 204, 84, 73),
+            ),
             onPressed: () => _confirmDelete(context),
           ),
         ),
@@ -117,7 +125,7 @@ class TransactionCard extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop();
                   await _deleteTransaction(context);
                 },
                 child: const Text(
@@ -183,10 +191,8 @@ class TransactionCard extends StatelessWidget {
           }
         }
 
-        // Calculate remaining amount
         double remainingAmount = totalCredit - totalDebit;
 
-        // Update user document with recalculated values
         await userRef.update({
           'totalBalance': totalBalance,
           'totalIncome': totalIncome,
@@ -198,13 +204,10 @@ class TransactionCard extends StatelessWidget {
         });
       }
 
-      // Show success message
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Transaction deleted successfully')),
       );
 
-      // Call the onDeleted callback to refresh parent or handle additional tasks
       onDeleted?.call();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

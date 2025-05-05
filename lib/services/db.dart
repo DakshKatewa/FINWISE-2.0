@@ -14,7 +14,7 @@ class Db {
         .set(data)
         .then((value) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: ((context) => Dashboard())),
+            MaterialPageRoute(builder: ((context) => const Dashboard())),
           );
         })
         .catchError((error) {
@@ -22,7 +22,7 @@ class Db {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title:const Text("Sign up Failed"),
+                title: const Text("Sign up Failed"),
                 content: Text(error.toString()),
               );
             },

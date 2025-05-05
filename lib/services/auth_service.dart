@@ -43,7 +43,7 @@ class AuthService {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -57,15 +57,15 @@ class AuthService {
         email: data['email'],
         password: data['password'],
       );
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: ((context) => Dashboard())));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: ((context) => const Dashboard())),
+      );
     } catch (e) {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Login Error"),
+            title: const Text("Login Error"),
             content: Text(e.toString()),
           );
         },

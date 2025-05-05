@@ -33,7 +33,7 @@ class TransectionList extends StatelessWidget {
     }
 
     return StreamBuilder<QuerySnapshot>(
-      stream: query.limit(500).snapshots(), // Changed to stream and snapshots()
+      stream: query.limit(500).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -69,7 +69,7 @@ class TransectionList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Total ${type[0].toUpperCase()}${type.substring(1)}"),
-                  Text("₹${total}"),
+                  Text("₹$total"),
                 ],
               ),
             ),

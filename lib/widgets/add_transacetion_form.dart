@@ -35,7 +35,6 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
         final user = FirebaseAuth.instance.currentUser;
         int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-        // Parse as double first, then convert to int to ensure consistent types
         int amount = double.parse(amountEditController.text).toInt();
         DateTime date = DateTime.now();
 
@@ -47,8 +46,6 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                 .collection('users')
                 .doc(user!.uid)
                 .get();
-
-        // Make sure we explicitly convert to int
         int remainingAmount = (userDoc['remainingAmount'] as num).toInt();
         int totalCredit = (userDoc['totalCredit'] as num).toInt();
         int totalDebit = (userDoc['totalDebit'] as num).toInt();
@@ -96,9 +93,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           Navigator.pop(context);
         }
       } catch (e) {
-        // Add error handling
         print("Error in form submission: $e");
-        // You could show a snackbar or alert dialog here
       } finally {
         setState(() {
           isLoader = false;
@@ -124,8 +119,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                    color: AppColors.iconColor, // or AppColors.greyish
-                    width: 4.0, // adjust thickness if needed
+                    color: AppColors.iconColor,
+                    width: 4.0,
                   ),
                 ),
               ),
@@ -142,8 +137,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                    color: AppColors.textColor, // or AppColors.greyish
-                    width: 4.0, // adjust thickness if needed
+                    color: AppColors.textColor,
+                    width: 4.0,
                   ),
                 ),
               ),

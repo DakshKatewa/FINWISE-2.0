@@ -149,14 +149,11 @@ class TransactionCard extends StatelessWidget {
           .collection('transactions')
           .doc(transactionId);
 
-      // Delete the transaction
       await transactionRef.delete();
 
-      // Check if any transactions remain
       final remainingTransactions =
           await userRef.collection('transactions').get();
       if (remainingTransactions.docs.isEmpty) {
-        // If no transactions left, reset everything to 0
         await userRef.update({
           'totalBalance': 0,
           'remainingAmount': 0,
@@ -167,7 +164,6 @@ class TransactionCard extends StatelessWidget {
           'updatedAt': DateTime.now().millisecondsSinceEpoch,
         });
       } else {
-        // Instead of adjusting the existing values, recalculate from scratch
         double totalBalance = 0;
         double totalIncome = 0;
         double totalExpense = 0;

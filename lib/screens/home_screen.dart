@@ -2,7 +2,7 @@ import 'package:budgettraker/core/themes/app_colors.dart';
 import 'package:budgettraker/widgets/drawer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Add this dependency
+import 'package:provider/provider.dart';
 import '../providers/user_data_provider.dart';
 import '../widgets/hero_card.dart';
 import '../widgets/transactions_cards.dart';
@@ -27,15 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initializeData() async {
-    // Try to load cached data first for immediate display
+    // loading cached data first
     final hasCachedData = await UserDataProvider.instance.loadCachedData();
 
     if (!hasCachedData) {
-      // If no cached data, refresh from Firebase
+      // If no cached data, refreshing from Firebase
       await UserDataProvider.instance.refreshData();
     }
 
-    // Set up real-time listeners for future updates
+    //real time listeners for future updates
     UserDataProvider.instance.setupListeners(userId);
 
     if (mounted) {

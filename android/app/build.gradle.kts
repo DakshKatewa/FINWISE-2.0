@@ -24,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.budgettraker"
+        applicationId = "com.example.finwise"
         minSdk = 23
         targetSdk = 35
         versionCode = 1

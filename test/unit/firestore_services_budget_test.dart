@@ -3,6 +3,7 @@ import 'package:budgettraker/services/firestore_services_budget.dart';
 
 class MockFirestoreService extends FirestoreService {
   @override
+ 
   Future<void> addBudget(String userId, double amount) async {
     if (amount < 0) throw Exception('Invalid amount');
   }

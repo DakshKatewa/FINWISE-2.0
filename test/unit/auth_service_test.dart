@@ -3,6 +3,7 @@ import 'package:budgettraker/services/auth_service.dart';
 
 class MockAuthService extends AuthService {
   @override
+  
   Future<bool> signIn(String email, String password) async {
     return email == 'test@test.com' && password == 'password';
   }
